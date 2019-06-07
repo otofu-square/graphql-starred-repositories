@@ -1,0 +1,25 @@
+{
+  "compilerOptions": {
+    "allowSyntheticDefaultImports": true,
+    "allowUnreachableCode": false,
+    "allowUnusedLabels": false,
+    "declaration": true,
+    "declarationMap": true,
+    "esModuleInterop": true,
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "noImplicitReturns": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "pretty": true,
+    "strict": true,
+    "target": "es5",
+    "jsx": "preserve",
+    "lib": ["esnext", "dom"],
+    "noEmit": true,
+    "baseUrl": ".",
+    "paths": {
+      "~/src*": ["./src*"]
+    }
+  }
+}
