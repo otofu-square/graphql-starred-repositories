@@ -1,5 +1,5 @@
 {
-  "name": "trending-viwer",
+  "name": "graphql-starred-repositories",
   "private": true,
   "scripts": {
     "build": "parcel build index.html",
@@ -8,23 +8,35 @@
     "format": "yarn eslint --fix && yarn stylelint --fix && yarn prettier --write",
     "eslint": "eslint --cache './**/*.{ts,tsx}'",
     "prettier": "prettier './**/*.{md,js,ts,tsx,json}'",
-    "stylelint": "stylelint --cache --syntax css-in-js './src/**/*.{ts,tsx}'"
+    "stylelint": "stylelint --cache --syntax css-in-js './src/**/*.{ts,tsx}'",
+    "graphql-codegen": "node --require dotenv/config ./node_modules/.bin/graphql-codegen --config codegen.yml",
+    "postinstall": "yarn graphql-codegen"
   },
   "dependencies": {
+    "graphql-tag": "2.10.1",
     "react": "16.8.6",
-    "react-dom": "16.8.6"
+    "react-dom": "16.8.6",
+    "urql": "1.1.0"
   },
   "devDependencies": {
+    "@graphql-codegen/cli": "1.2.0",
+    "@graphql-codegen/fragment-matcher": "1.2.0",
+    "@graphql-codegen/introspection": "1.2.0",
+    "@graphql-codegen/typescript": "1.2.0",
+    "@graphql-codegen/typescript-operations": "1.2.0",
+    "@graphql-codegen/typescript-urql": "1.2.0",
     "@types/node": "12.0.7",
     "@types/react": "16.8.19",
     "@types/react-dom": "16.8.4",
     "@typescript-eslint/eslint-plugin": "1.9.0",
+    "dotenv": "8.0.0",
     "eslint": "5.16.0",
     "eslint-config-airbnb": "17.1.0",
     "eslint-config-prettier": "4.3.0",
     "eslint-plugin-import": "2.17.3",
     "eslint-plugin-jsx-a11y": "6.2.1",
     "eslint-plugin-react": "7.13.0",
+    "graphql": "14.3.1",
     "npm-run-all": "4.1.5",
     "parcel-bundler": "1.12.3",
     "prettier": "1.18.2",
