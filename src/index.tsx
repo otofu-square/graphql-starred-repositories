@@ -1,7 +1,7 @@
 import * as React from "react";
 import { render } from "react-dom";
 import { createClient, Provider } from "urql";
-import { Repositories } from "./Repositories";
+import { App } from "./App";
 
 const client = createClient({
   url: "https://api.github.com/graphql",
@@ -13,10 +13,9 @@ const client = createClient({
   }
 });
 
-const App = () => (
+render(
   <Provider value={client}>
-    <Repositories />
-  </Provider>
+    <App />
+  </Provider>,
+  document.getElementById("app")
 );
-
-render(<App />, document.getElementById("app"));

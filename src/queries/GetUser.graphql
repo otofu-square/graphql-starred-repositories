@@ -1,7 +1,21 @@
-query GetUser($login: String!) {
+query GetUser(
+  $login: String!
+  $first: Int
+  $last: Int
+  $after: String
+  $before: String
+) {
   user(login: $login) {
-    starredRepositories(last: 20) {
+    starredRepositories(
+      first: $first
+      last: $last
+      after: $after
+      before: $before
+      orderBy: { direction: DESC, field: STARRED_AT }
+    ) {
       edges {
+        cursor
+        starredAt
         node {
           id
           nameWithOwner
@@ -11,6 +25,13 @@ query GetUser($login: String!) {
             name
           }
         }
+      }
+      totalCount
+      pageInfo {
+        endCursor
+        startCursor
+        hasNextPage
+        hasPreviousPage
       }
     }
   }

@@ -1,43 +1,144 @@
 import * as React from "react";
 import { useGetUserQuery } from "~/src/generated/graphql";
 import { Repository } from "./Repository";
+import { PaginationButtons } from "./PaginationButtons";
 
-export const Repositories: React.FC = () => {
-  const [res] = useGetUserQuery({ variables: { login: "otofu-square" } });
+type Props = {
+  login: string;
+};
 
-  const edges =
-    res.data &&
-    res.data.user &&
-    res.data.user.starredRepositories &&
-    res.data.user.starredRepositories.edges;
+type Variables = {
+  login: string;
+  first: number | null | undefined;
+  last: number | null | undefined;
+  after: string | null | undefined;
+  before: string | null | undefined;
+};
 
-  if (res.fetching) return <div>Loading...</div>;
-  if (res.error)
+const useQuery = (login: Props["login"]) => {
+  const [variables, setVariables] = React.useState<Variables>({
+    login,
+    first: 5,
+    last: null,
+    after: null,
+    before: null
+  });
+  const [res] = useGetUserQuery({
+    variables,
+    requestPolicy: "cache-and-network"
+  });
+
+  const user = res.data && res.data.user;
+  const starredRepositories = user && user.starredRepositories;
+  const edges = (starredRepositories && starredRepositories.edges) || [];
+  const pageInfo = starredRepositories && starredRepositories.pageInfo;
+  const hasNextPage = pageInfo && pageInfo.hasNextPage;
+  const hasPreviousPage = pageInfo && pageInfo.hasPreviousPage;
+  const endCursor = pageInfo && pageInfo.endCursor;
+  const startCursor = pageInfo && pageInfo.startCursor;
+  const repositories = edges.map(edge => edge!.node);
+
+  const onFirstClick = React.useCallback(() => {
+    setVariables({
+      login,
+      first: 5,
+      last: null,
+      after: null,
+      before: null
+    });
+  }, [login]);
+
+  const onNextClick = React.useCallback(() => {
+    if (!hasNextPage || !endCursor) return;
+    setVariables({
+      login,
+      first: 5,
+      last: null,
+      after: endCursor,
+      before: null
+    });
+  }, [endCursor, hasNextPage, login]);
+
+  const onPreviousClick = React.useCallback(() => {
+    if (!hasPreviousPage || !startCursor) return;
+    setVariables({
+      login,
+      first: null,
+      last: 5,
+      after: null,
+      before: startCursor
+    });
+  }, [hasPreviousPage, login, startCursor]);
+
+  const onLastClick = React.useCallback(() => {
+    setVariables({
+      login,
+      first: null,
+      last: 5,
+      after: null,
+      before: null
+    });
+  }, [login]);
+
+  return {
+    fetching: res.fetching,
+    error: res.error,
+    hasNextPage,
+    hasPreviousPage,
+    repositories,
+    onFirstClick,
+    onNextClick,
+    onPreviousClick,
+    onLastClick
+  };
+};
+
+export const Repositories: React.FC<Props> = ({ login }) => {
+  const {
+    fetching,
+    error,
+    hasNextPage,
+    hasPreviousPage,
+    repositories,
+    onFirstClick,
+    onNextClick,
+    onPreviousClick,
+    onLastClick
+  } = useQuery(login);
+
+  if (fetching) return <div>Loading...</div>;
+  if (error)
     return (
       <div>
-        <p>{res.error.name}</p>
-        <p>{res.error.message}</p>
+        <p>{error.name}</p>
+        <p>{error.message}</p>
       </div>
     );
   return (
-    <ul>
-      {edges &&
-        edges.map(
-          edge =>
-            edge && (
-              <Repository
-                key={edge.node.id}
-                url={edge.node.url}
-                nameWithOwner={edge.node.nameWithOwner}
-                description={edge.node.description || ""}
-                primaryLanguageName={
-                  edge.node.primaryLanguage
-                    ? edge.node.primaryLanguage.name
-                    : "none"
-                }
-              />
-            )
-        )}
-    </ul>
+    <div>
+      <ul>
+        {repositories.map(repository => (
+          <Repository
+            key={repository.id}
+            url={repository.url}
+            nameWithOwner={repository.nameWithOwner}
+            description={repository.description || ""}
+            primaryLanguageName={
+              repository.primaryLanguage
+                ? repository.primaryLanguage.name
+                : "none"
+            }
+          />
+        ))}
+      </ul>
+      <PaginationButtons
+        hasNextPage={!!hasNextPage}
+        hasPreviousPage={!!hasPreviousPage}
+        onFirstClick={onFirstClick}
+        onNextClick={onNextClick}
+        onPreviousClick={onPreviousClick}
+        onLastClick={onLastClick}
+      />
+    </div>
   );
 };
