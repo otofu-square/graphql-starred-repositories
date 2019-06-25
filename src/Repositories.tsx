@@ -1,5 +1,6 @@
 import * as React from "react";
 import { useGetUserQuery } from "~/src/generated/graphql";
+import { prism } from "lens.ts/src";
 import { Repository } from "./Repository";
 import { PaginationButtons } from "./PaginationButtons";
 
@@ -28,15 +29,14 @@ const useQuery = (login: Props["login"]) => {
     requestPolicy: "cache-and-network"
   });
 
-  const user = res.data && res.data.user;
-  const starredRepositories = user && user.starredRepositories;
-  const edges = (starredRepositories && starredRepositories.edges) || [];
-  const pageInfo = starredRepositories && starredRepositories.pageInfo;
-  const hasNextPage = pageInfo && pageInfo.hasNextPage;
-  const hasPreviousPage = pageInfo && pageInfo.hasPreviousPage;
-  const endCursor = pageInfo && pageInfo.endCursor;
-  const startCursor = pageInfo && pageInfo.startCursor;
-  const repositories = edges.map(edge => edge!.node);
+  const lens = prism<typeof res>();
+  const { edges, pageInfo } = lens.data.user.starredRepositories;
+
+  const hasNextPage = pageInfo.hasNextPage.get()(res);
+  const hasPreviousPage = pageInfo.hasPreviousPage.get()(res);
+  const endCursor = pageInfo.endCursor.get()(res);
+  const startCursor = pageInfo.startCursor.get()(res);
+  const repositories = edges.map(edge => edge.node.get()(res)!);
 
   const onFirstClick = React.useCallback(() => {
     setVariables({
