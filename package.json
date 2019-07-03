@@ -14,6 +14,7 @@
   },
   "dependencies": {
     "graphql-tag": "2.10.1",
+    "lens.ts": "https://github.com/tbo/lens.ts#master",
     "react": "16.8.6",
     "react-dom": "16.8.6",
     "urql": "1.1.0"
