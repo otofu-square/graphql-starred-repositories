@@ -47,6 +47,6 @@
     "stylelint-config-prettier": "6.0.0",
     "stylelint-config-recess-order": "2.0.3",
     "stylelint-config-standard": "19.0.0",
-    "typescript": "3.6.3"
+    "typescript": "3.7.0-beta"
   }
 }

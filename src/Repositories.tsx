@@ -28,14 +28,12 @@ const useQuery = (login: Props["login"]) => {
     requestPolicy: "cache-and-network"
   });
 
-  const user = res.data && res.data.user;
-  const starredRepositories = user && user.starredRepositories;
-  const edges = (starredRepositories && starredRepositories.edges) || [];
-  const pageInfo = starredRepositories && starredRepositories.pageInfo;
-  const hasNextPage = pageInfo && pageInfo.hasNextPage;
-  const hasPreviousPage = pageInfo && pageInfo.hasPreviousPage;
-  const endCursor = pageInfo && pageInfo.endCursor;
-  const startCursor = pageInfo && pageInfo.startCursor;
+  const edges = (res.data?.user?.starredRepositories?.edges) || [];
+  const pageInfo = res.data?.user?.starredRepositories?.pageInfo;
+  const hasNextPage = pageInfo?.hasNextPage;
+  const hasPreviousPage = pageInfo?.hasPreviousPage;
+  const endCursor = pageInfo?.endCursor;
+  const startCursor = pageInfo?.startCursor;
   const repositories = edges.map(edge => edge!.node);
 
   const onFirstClick = React.useCallback(() => {
@@ -123,11 +121,7 @@ export const Repositories: React.FC<Props> = ({ login }) => {
             url={repository.url}
             nameWithOwner={repository.nameWithOwner}
             description={repository.description || ""}
-            primaryLanguageName={
-              repository.primaryLanguage
-                ? repository.primaryLanguage.name
-                : "none"
-            }
+            primaryLanguageName={repository.primaryLanguage?.name || "none"}
           />
         ))}
       </ul>
