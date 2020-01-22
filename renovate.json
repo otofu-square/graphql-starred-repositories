@@ -1,5 +1,7 @@
 {
   "extends": ["config:base"],
+  "lockFileMaintenance": true,
+  "postUpdateOptions": ["yarnDedupeHighest"],
   "packageRules": [
     {
       "packagePatterns": ["*"]
