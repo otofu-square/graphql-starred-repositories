@@ -4,9 +4,6 @@
   "postUpdateOptions": ["yarnDedupeHighest"],
   "packageRules": [
     {
-      "packagePatterns": ["*"]
-    },
-    {
       "depTypeList": ["dependencies"],
       "groupName": "dependencies"
     },
