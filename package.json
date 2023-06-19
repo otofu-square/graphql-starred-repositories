@@ -13,11 +13,11 @@
     "postinstall": "yarn graphql-codegen"
   },
   "dependencies": {
-    "graphql-tag": "2.10.1",
+    "graphql-tag": "2.12.6",
     "lens.ts": "https://github.com/tbo/lens.ts#master",
-    "react": "16.12.0",
-    "react-dom": "16.12.0",
-    "urql": "1.8.2"
+    "react": "16.14.0",
+    "react-dom": "16.14.0",
+    "urql": "1.11.6"
   },
   "devDependencies": {
     "@graphql-codegen/cli": "1.12.1",
